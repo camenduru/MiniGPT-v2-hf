@@ -171,7 +171,7 @@ class BaseModel(nn.Module):
     def init_llm(cls, llama_model_path, low_resource=False, low_res_device=0, lora_r=0,
                  lora_target_modules=["q_proj","v_proj"], **lora_kargs):
         logging.info('Loading LLAMA')
-        llama_tokenizer = LlamaTokenizer.from_pretrained(llama_model_path, use_fast=False, use_auth_token=True)
+        llama_tokenizer = LlamaTokenizer.from_pretrained(llama_model_path, use_fast=False)
         llama_tokenizer.pad_token = "$$"
 
         if low_resource:
@@ -180,13 +180,13 @@ class BaseModel(nn.Module):
                 torch_dtype=torch.float16,
                 load_in_8bit=True,
                 device_map={'': low_res_device},
-                use_auth_token=True,
+                # use_auth_token=True,
             )
         else:
             llama_model = LlamaForCausalLM.from_pretrained(
                 llama_model_path,
                 torch_dtype=torch.float16,
-                use_auth_token=True,
+                # use_auth_token=True,
             )
 
         if lora_r > 0:
