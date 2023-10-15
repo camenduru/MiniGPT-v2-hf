@@ -191,7 +191,7 @@ def visualize_all_bbox_together(image, generation):
         return None, ''
 
     generation = html.unescape(generation)
-    print('gen begin', generation)
+    # print('gen begin', generation)
 
     image_width, image_height = image.size
     image = image.resize([500, int(500 / image_width * image_height)])
@@ -207,7 +207,7 @@ def visualize_all_bbox_together(image, generation):
             try:
                 obj, string = string.split('</p>')
             except ValueError:
-                print('wrong string: ', string)
+                # print('wrong string: ', string)
                 continue
             bbox_list = string.split('<delim>')
             flag = False
@@ -372,9 +372,9 @@ def visualize_all_bbox_together(image, generation):
             color = next(color_gen)
             return f'<span style="color:rgb{color}">{phrase}</span>'
 
-        print('gen before', generation)
+        # print('gen before', generation)
         generation = re.sub(r'{<\d+><\d+><\d+><\d+>}|<delim>', '', generation)
-        print('gen after', generation)
+        # print('gen after', generation)
         generation_colored = re.sub(r'<p>(.*?)</p>', colored_phrases, generation)
     else:
         generation_colored = ''
@@ -395,27 +395,27 @@ def gradio_reset(chat_state, img_list):
 def image_upload_trigger(upload_flag, replace_flag, img_list):
     # set the upload flag to true when receive a new image.
     # if there is an old image (and old conversation), set the replace flag to true to reset the conv later.
-    print('flag', upload_flag, replace_flag)
-    print("SET UPLOAD FLAG!")
+    # print('flag', upload_flag, replace_flag)
+    # print("SET UPLOAD FLAG!")
     upload_flag = 1
     if img_list:
-        print("SET REPLACE FLAG!")
+        # print("SET REPLACE FLAG!")
         replace_flag = 1
-    print('flag', upload_flag, replace_flag)
+    # print('flag', upload_flag, replace_flag)
     return upload_flag, replace_flag
 
 
 def example_trigger(text_input, image, upload_flag, replace_flag, img_list):
     # set the upload flag to true when receive a new image.
     # if there is an old image (and old conversation), set the replace flag to true to reset the conv later.
-    print('flag', upload_flag, replace_flag)
-    print("SET UPLOAD FLAG!")
+    # print('flag', upload_flag, replace_flag)
+    # print("SET UPLOAD FLAG!")
     upload_flag = 1
     if img_list or replace_flag == 1:
-        print("SET REPLACE FLAG!")
+        # print("SET REPLACE FLAG!")
         replace_flag = 1
 
-    print('flag', upload_flag, replace_flag)
+    # print('flag', upload_flag, replace_flag)
     return upload_flag, replace_flag
 
 
@@ -438,14 +438,14 @@ def gradio_ask(user_message, chatbot, chat_state, gr_img, img_list, upload_flag,
     if chat_state is None:
         chat_state = CONV_VISION.copy()
 
-    print('upload flag: {}'.format(upload_flag))
+    # print('upload flag: {}'.format(upload_flag))
     if upload_flag:
         if replace_flag:
             print('RESET!!!!!!!')
             chat_state = CONV_VISION.copy()  # new image, reset everything
             replace_flag = 0
             chatbot = []
-        print('UPLOAD IMAGE!!')
+        # print('UPLOAD IMAGE!!')
         img_list = []
         llm_message = chat.upload_img(gr_img, chat_state, img_list)
         upload_flag = 0
@@ -457,7 +457,7 @@ def gradio_ask(user_message, chatbot, chat_state, gr_img, img_list, upload_flag,
     if '[identify]' in user_message:
         visual_img, _ = visualize_all_bbox_together(gr_img, user_message)
         if visual_img is not None:
-            print('Visualizing the input')
+            # print('Visualizing the input')
             file_path = save_tmp_img(visual_img)
             chatbot = chatbot + [[(file_path,), None]]
 
@@ -475,9 +475,9 @@ def gradio_answer(chatbot, chat_state, img_list, temperature):
 
 
 def gradio_stream_answer(chatbot, chat_state, img_list, temperature):
-    print('chat state', chat_state.get_prompt())
-    if not isinstance(img_list[0], torch.Tensor):
-        chat.encode_img(img_list)
+    if len(img_list) > 0:
+        if not isinstance(img_list[0], torch.Tensor):
+            chat.encode_img(img_list)
     streamer = chat.stream_answer(conv=chat_state,
                                   img_list=img_list,
                                   temperature=temperature,
@@ -501,7 +501,7 @@ def gradio_visualize(chatbot, gr_img):
     unescaped = reverse_escape(chatbot[-1][1])
     visual_img, generation_color = visualize_all_bbox_together(gr_img, unescaped)
     if visual_img is not None:
-        print('Visualizing the output')
+        # print('Visualizing the output')
         if len(generation_color):
             chatbot[-1][1] = generation_color
         file_path = save_tmp_img(visual_img)
@@ -659,4 +659,4 @@ with gr.Blocks() as demo:
 
     clear.click(gradio_reset, [chat_state, img_list], [chatbot, image, text_input, chat_state, img_list], queue=False)
 
-demo.launch(share=True, enable_queue=True)
+demo.launch(enable_queue=True)
