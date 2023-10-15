@@ -1,0 +1,8 @@
+--extra-index-url https://download.pytorch.org/whl/cu113
+torch==2.0.0
+torchvision==0.13.1
+salesforce-lavis
+bitsandbytes==0.37.0
+accelerate==0.20.3
+transformers==4.30.0
+peft==0.2.0
