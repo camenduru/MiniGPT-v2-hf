@@ -33,3 +33,10 @@ saved_model/**/* filter=lfs diff=lfs merge=lfs -text
 *.zip filter=lfs diff=lfs merge=lfs -text
 *.zst filter=lfs diff=lfs merge=lfs -text
 *tfevents* filter=lfs diff=lfs merge=lfs -text
+examples_v2/cockdial.png filter=lfs diff=lfs merge=lfs -text
+examples_v2/float.png filter=lfs diff=lfs merge=lfs -text
+figs/demo.png filter=lfs diff=lfs merge=lfs -text
+figs/minigpt2_demo.png filter=lfs diff=lfs merge=lfs -text
+figs/online_demo.png filter=lfs diff=lfs merge=lfs -text
+figs/overview.png filter=lfs diff=lfs merge=lfs -text
+MiniGPTv2.pdf filter=lfs diff=lfs merge=lfs -text
