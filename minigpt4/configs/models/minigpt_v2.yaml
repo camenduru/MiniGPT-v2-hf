@@ -11,7 +11,7 @@ model:
   # generation configs
   prompt: ""
 
-  llama_model: "llama-2-7b-chat-pytorch"
+  llama_model: "meta-llama/Llama-2-7b-chat-hf"
   lora_r: 64
   lora_alpha: 16
 
